@@ -19,3 +19,13 @@ func GetAlphabeticLowercase() []rune {
 
 	return letters
 }
+
+func GetNumeric() []rune {
+	var nums []rune
+
+    for ch := '0'; ch <= '9'; ch++ {
+        nums = append(nums, ch)
+    }
+
+	return nums
+}
