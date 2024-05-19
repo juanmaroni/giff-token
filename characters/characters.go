@@ -1,31 +1,23 @@
 package characters
 
-func GetAlphabeticUppercase() []rune {
-	var letters []rune
-
-    for ch := 'A'; ch <= 'Z'; ch++ {
-        letters = append(letters, ch)
+func GetAlphabeticUppercase() [26]rune {
+	return [26]rune {
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
+        'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+        'U', 'V', 'W', 'X', 'Y', 'Z',
     }
-
-	return letters
 }
 
-func GetAlphabeticLowercase() []rune {
-	var letters []rune
-
-    for ch := 'a'; ch <= 'z'; ch++ {
-        letters = append(letters, ch)
+func GetAlphabeticLowercase() [26]rune {
+	return [26]rune {
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+        'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+        'u', 'v', 'w', 'x', 'y', 'z',
     }
-
-	return letters
 }
 
-func GetNumeric() []rune {
-	var nums []rune
-
-    for ch := '0'; ch <= '9'; ch++ {
-        nums = append(nums, ch)
-    }
-
-	return nums
+func GetNumeric() [10]rune {
+	return [10]rune {
+		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+	}
 }
