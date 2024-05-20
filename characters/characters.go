@@ -16,7 +16,7 @@ func GetAlphabeticLowercase() [26]rune {
     }
 }
 
-func GetNumeric() [10]rune {
+func GetDigits() [10]rune {
 	return [10]rune {
 		'0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
 	}
