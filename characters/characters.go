@@ -1,5 +1,30 @@
 package characters
 
+type Charset map[rune]struct{}
+
+func NewCharset(characters string) Charset {
+	charset := make(Charset)
+
+    for _, c := range characters {
+        charset[c] = struct{}{}
+    }
+
+    return charset
+}
+
+func (charset Charset) Add(characters string) {
+	for _, c := range characters {
+        charset[c] = struct{}{}
+    }
+}
+
+func (charset Charset) Remove(characters string) {
+	for _, c := range characters {
+        delete(charset, c)
+    }
+}
+
+
 func GetAlphabeticUppercase() [26]rune {
 	return [26]rune {
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
