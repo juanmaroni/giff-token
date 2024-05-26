@@ -28,3 +28,16 @@ func (charset Charset) Remove(characters string) {
         delete(charset, c)
     }
 }
+
+
+func (charset Charset) ExtractCharset() []rune {
+	chars := make([]rune, len(charset))
+	i := 0
+	
+	for k := range charset {
+		chars[i] = k
+		i++
+	}
+
+	return chars
+}
