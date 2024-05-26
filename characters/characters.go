@@ -41,3 +41,9 @@ func (charset Charset) ExtractCharset() []rune {
 
 	return chars
 }
+
+func (charset Charset) MergeCharset(anotherCharset Charset) {
+	for k, v := range anotherCharset {
+		charset[k] = v
+	}
+}

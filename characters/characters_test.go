@@ -63,6 +63,18 @@ func TestRemoveChar(t *testing.T) {
 	}
 }
 
+func TestMergeCharset(t *testing.T) {
+	expect := "123456"
+	charset1 := NewCharset("123")
+	charset2 := NewCharset("456")
+	charset1.MergeCharset(charset2)
+	result := extractAndSortCharacters(charset1.ExtractCharset())
+
+	if result != expect {
+		t.Errorf("Result was incorrect, got: %s, want: %s.", result, expect)
+	}
+}
+
 func extractAndSortCharacters(array []rune) string {
 	sort.Slice(array, func(i, j int) bool {
         return array[i] < array[j]
