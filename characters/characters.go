@@ -43,7 +43,7 @@ func (charset Charset) ExtractCharset() []rune {
 }
 
 // Go routines?
-func (charset Charset) MergeCharset(moreCharsets... Charset) {
+func (charset Charset) MergeCharsets(moreCharsets... Charset) {
 	for _, anotherCharset := range moreCharsets {
 		for k, v := range anotherCharset {
 			charset[k] = v
