@@ -64,10 +64,11 @@ func TestRemoveChar(t *testing.T) {
 }
 
 func TestMergeCharset(t *testing.T) {
-	expect := "123456"
+	expect := "123456789"
 	charset1 := NewCharset("123")
 	charset2 := NewCharset("456")
-	charset1.MergeCharset(charset2)
+	charset3 := NewCharset("789")
+	charset1.MergeCharset(charset2, charset3)
 	result := extractAndSortCharacters(charset1.ExtractCharset())
 
 	if result != expect {
