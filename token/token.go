@@ -24,7 +24,7 @@ const (
 type TokenOptions struct {
 	length uint8
 	mode Mode
-	characters []rune
+	Characters []rune
 }
 
 // Token options with default values (running without parameters)
@@ -39,7 +39,7 @@ func DefaultTokenOptions() TokenOptions {
 	return TokenOptions{
 		length: 24,
 		mode: defaultMode,
-		characters: chars,
+		Characters: chars,
 	};
 }
 
@@ -57,7 +57,7 @@ func NewTokenOptions(length uint8, mode Mode, customChars string, includeChars s
 	return TokenOptions{
 		length: length,
 		mode: mode,
-		characters: chars,
+		Characters: chars,
 	};
 }
 
