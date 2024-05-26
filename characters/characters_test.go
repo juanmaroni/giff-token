@@ -41,6 +41,28 @@ func TestGetSymbols(t *testing.T) {
 	}
 }
 
+func TestAddChar(t *testing.T) {
+	expect := "1237"
+	chars := NewCharset("123")
+	chars.Add("7")
+	result := extractAndSortCharacters(chars.ExtractCharset())
+	
+	if result != expect {
+		t.Errorf("Result was incorrect, got: %s, want: %s.", result, expect)
+	}
+}
+
+func TestRemoveChar(t *testing.T) {
+	expect := "123"
+	chars := NewCharset("1239")
+	chars.Remove("9")
+	result := extractAndSortCharacters(chars.ExtractCharset())
+
+	if result != expect {
+		t.Errorf("Result was incorrect, got: %s, want: %s.", result, expect)
+	}
+}
+
 func extractAndSortCharacters(array []rune) string {
 	sort.Slice(array, func(i, j int) bool {
         return array[i] < array[j]
