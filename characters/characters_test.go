@@ -1,15 +1,13 @@
 package characters
 
-import "testing"
-
-const ALPHABETIC_UPPERCASE string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-const ALPHABETIC_LOWERCASE string = "abcdefghijklmnopqrstuvwxyz"
-const DIGITS string = "0123456789"
-const SYMBOLS string = "!@#$%^&*_-+=[]{}/\\?<>,;:\"'"
+import (
+	"sort"
+	"testing"
+)
 
 func TestGetAlphabeticUppercase(t *testing.T) {
-    chars := GetAlphabeticUppercase()
-	result := string(chars[:])
+    chars := NewCharset(ALPHABETIC_UPPERCASE)
+	result := extractAndSortCharacters(chars.ExtractCharset())
 
 	if result != ALPHABETIC_UPPERCASE {
 		t.Errorf("Result was incorrect, got: %s, want: %s.", result, ALPHABETIC_UPPERCASE)
@@ -17,17 +15,17 @@ func TestGetAlphabeticUppercase(t *testing.T) {
 }
 
 func TestGetAlphabeticLowercase(t *testing.T) {
-    chars := GetAlphabeticLowercase()
-	result := string(chars[:])
+    chars := NewCharset(ALPHABETIC_LOWERCASE)
+	result := extractAndSortCharacters(chars.ExtractCharset())
 
-	if result != ALPHABETIC_LOWERCASE {
+	if result !=ALPHABETIC_LOWERCASE {
 		t.Errorf("Result was incorrect, got: %s, want: %s.", result, ALPHABETIC_LOWERCASE)
 	}
 }
 
 func TestGetDigits(t *testing.T) {
-    chars := GetDigits()
-	result := string(chars[:])
+    chars := NewCharset(DIGITS)
+	result := extractAndSortCharacters(chars.ExtractCharset())
 
 	if result != DIGITS {
 		t.Errorf("Result was incorrect, got: %s, want: %s.", result, DIGITS)
@@ -35,10 +33,18 @@ func TestGetDigits(t *testing.T) {
 }
 
 func TestGetSymbols(t *testing.T) {
-    chars := GetSymbols()
-	result := string(chars[:])
+    chars := NewCharset(SYMBOLS)
+	result := extractAndSortCharacters(chars.ExtractCharset())
 
 	if result != SYMBOLS {
 		t.Errorf("Result was incorrect, got: %s, want: %s.", result, SYMBOLS)
 	}
+}
+
+func extractAndSortCharacters(array []rune) string {
+	sort.Slice(array, func(i, j int) bool {
+        return array[i] < array[j]
+    })
+
+	return string(array)
 }
