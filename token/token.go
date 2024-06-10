@@ -21,14 +21,17 @@ const (
 	Digits Mode              = "digits"
 )
 
-type TokenOptions struct {
+type TokenConfig struct {
 	length uint8
 	mode Mode
+	customChars string
+	includeChars string
+	excludeChars string
 	Characters []rune
 }
 
-// Token options with default values
-func DefaultTokenOptions() TokenOptions {
+// Token options with default values // Delete or change, use NewTokenConfig
+func DefaultTokenConfig() TokenConfig {
 	const defaultMode = Alphanumeric
 	chars, err := GetCharacters(defaultMode, "")
 
@@ -36,14 +39,14 @@ func DefaultTokenOptions() TokenOptions {
 		panic(err)
 	}
 
-	return TokenOptions {
+	return TokenConfig {
 		length: 24,
 		mode: defaultMode,
 		Characters: chars,
 	}
 }
 
-func NewTokenOptions(length uint8, mode Mode, customChars string, includeChars string, excludeChars string) TokenOptions {
+func NewTokenConfig(length uint8, mode Mode, customChars string, includeChars string, excludeChars string) TokenConfig {
 	if (mode != Custom) {
 		customChars = ""
 	}
@@ -54,15 +57,18 @@ func NewTokenOptions(length uint8, mode Mode, customChars string, includeChars s
 		panic(err)
 	}
 
-	return TokenOptions {
+	return TokenConfig {
 		length: length,
 		mode: mode,
+		customChars: customChars,
+		includeChars: includeChars,
+		excludeChars: excludeChars,
 		Characters: chars,
 	}
 }
 
 // Allowed chars based on the mode selected
-func GetCharacters(mode Mode, customCharacters string) ([]rune, error) {
+func GetCharacters(mode Mode, customCharacters string) ([]rune, error) { // Change parameters to TokenConfig? Add/include and remove/exclude
 	switch mode {
 	case Alphanumeric:
 		charset := characters.NewCharset(characters.ALPHABETIC_UPPERCASE)
