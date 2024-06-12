@@ -22,7 +22,7 @@ const (
 )
 
 // map of string to Mode for quick lookup
-var modeMap = map[string]Mode{
+var modeMap = map[string]Mode {
 	"alphanumeric":            Alphanumeric,
 	"alphanumeric_lowercase":  AlphanumericLower,
 	"alphanumeric_uppercase":  AlphanumericUpper,
