@@ -83,6 +83,10 @@ func NewTokenConfig(length uint16, mode Mode, customChars string, includeChars s
 		panic(err)
 	}
 
+	if len(chars) == 0 {
+		panic("Charset is empty!")
+	}
+
 	return TokenConfig {
 		Length: length,
 		mode: mode,
@@ -172,6 +176,7 @@ func GetCharacters(mode Mode, customCharacters string, includeChars string, excl
 		return charset.ExtractCharset(), nil
 	case Custom:
 		charset := characters.NewCharset(customCharacters)
+
 		return charset.ExtractCharset(), nil
 	case Digits:
 		charset := characters.NewCharset(characters.DIGITS)
