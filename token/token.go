@@ -9,14 +9,14 @@ type Mode string
 
 const (
 	Alphanumeric Mode        = "alphanumeric"
-	AlphanumericLower Mode   = "alphanumeric lowercase"
-	AlphanumericUpper Mode   = "alphanumeric uppercase"
+	AlphanumericLower Mode   = "alphanumeric_lowercase"
+	AlphanumericUpper Mode   = "alphanumeric_uppercase"
 	Allchars Mode            = "allchars"
-	AllcharsLower Mode       = "allchars lowercase"
-	AllcharsUpper Mode       = "allchars uppercase"
+	AllcharsLower Mode       = "allchars_lowercase"
+	AllcharsUpper Mode       = "allchars_uppercase"
 	Alphabetic Mode          = "alphabetic"
-	AlphabeticLower Mode     = "alphabetic lowercase"
-	AlphabeticUpper Mode     = "alphabetic uppercase"
+	AlphabeticLower Mode     = "alphabetic_lowercase"
+	AlphabeticUpper Mode     = "alphabetic_uppercase"
 	Custom Mode              = "custom"
 	Digits Mode              = "digits"
 )
@@ -24,14 +24,14 @@ const (
 // map of string to Mode for quick lookup
 var modeMap = map[string]Mode{
 	"alphanumeric":            Alphanumeric,
-	"alphanumeric lowercase":  AlphanumericLower,
-	"alphanumeric uppercase":  AlphanumericUpper,
+	"alphanumeric_lowercase":  AlphanumericLower,
+	"alphanumeric_uppercase":  AlphanumericUpper,
 	"allchars":                Allchars,
-	"allchars lowercase":      AllcharsLower,
-	"allchars uppercase":      AllcharsUpper,
+	"allchars_lowercase":      AllcharsLower,
+	"allchars_uppercase":      AllcharsUpper,
 	"alphabetic":              Alphabetic,
-	"alphabetic lowercase":    AlphabeticLower,
-	"alphabetic uppercase":    AlphabeticUpper,
+	"alphabetic_lowercase":    AlphabeticLower,
+	"alphabetic_uppercase":    AlphabeticUpper,
 	"custom":                  Custom,
 	"digits":                  Digits,
 }
@@ -59,7 +59,7 @@ type TokenConfig struct {
 // Token options with default values // Delete or change, use NewTokenConfig
 func DefaultTokenConfig() TokenConfig {
 	const defaultMode = Alphanumeric
-	chars, err := GetCharacters(defaultMode, "")
+	chars, err := GetCharacters(defaultMode, "", "", "")
 
 	if err != nil {
 		panic(err)
@@ -77,7 +77,7 @@ func NewTokenConfig(length uint16, mode Mode, customChars string, includeChars s
 		customChars = ""
 	}
 
-	chars, err := GetCharacters(mode, customChars)
+	chars, err := GetCharacters(mode, customChars, includeChars, excludeChars)
 
 	if err != nil {
 		panic(err)
@@ -94,7 +94,7 @@ func NewTokenConfig(length uint16, mode Mode, customChars string, includeChars s
 }
 
 // Allowed chars based on the mode selected
-func GetCharacters(mode Mode, customCharacters string) ([]rune, error) { // Change parameters to TokenConfig? Add/include and remove/exclude
+func GetCharacters(mode Mode, customCharacters string, includeChars string, excludeChars string) ([]rune, error) {
 	switch mode {
 	case Alphanumeric:
 		charset := characters.NewCharset(characters.ALPHABETIC_UPPERCASE)
@@ -102,14 +102,23 @@ func GetCharacters(mode Mode, customCharacters string) ([]rune, error) { // Chan
 			characters.NewCharset(characters.ALPHABETIC_LOWERCASE),
 			characters.NewCharset(characters.DIGITS),
 		)
+		charset.Add(includeChars)
+		charset.Remove(excludeChars)
+
 		return charset.ExtractCharset(), nil
 	case AlphanumericLower:
 		charset := characters.NewCharset(characters.ALPHABETIC_LOWERCASE)
 		charset.MergeCharsets(characters.NewCharset(characters.DIGITS))
+		charset.Add(includeChars)
+		charset.Remove(excludeChars)
+		
 		return charset.ExtractCharset(), nil
 	case AlphanumericUpper:
 		charset := characters.NewCharset(characters.ALPHABETIC_UPPERCASE)
 		charset.MergeCharsets(characters.NewCharset(characters.DIGITS))
+		charset.Add(includeChars)
+		charset.Remove(excludeChars)
+		
 		return charset.ExtractCharset(), nil
 	case Allchars:
 		charset := characters.NewCharset(characters.ALPHABETIC_UPPERCASE)
@@ -118,6 +127,9 @@ func GetCharacters(mode Mode, customCharacters string) ([]rune, error) { // Chan
 			characters.NewCharset(characters.DIGITS),
 			characters.NewCharset(characters.SYMBOLS),
 		)
+		charset.Add(includeChars)
+		charset.Remove(excludeChars)
+		
 		return charset.ExtractCharset(), nil
 	case AllcharsLower:
 		charset := characters.NewCharset(characters.ALPHABETIC_LOWERCASE)
@@ -125,6 +137,9 @@ func GetCharacters(mode Mode, customCharacters string) ([]rune, error) { // Chan
 			characters.NewCharset(characters.DIGITS),
 			characters.NewCharset(characters.SYMBOLS),
 		)
+		charset.Add(includeChars)
+		charset.Remove(excludeChars)
+		
 		return charset.ExtractCharset(), nil
 	case AllcharsUpper:
 		charset := characters.NewCharset(characters.ALPHABETIC_UPPERCASE)
@@ -132,22 +147,37 @@ func GetCharacters(mode Mode, customCharacters string) ([]rune, error) { // Chan
 			characters.NewCharset(characters.DIGITS),
 			characters.NewCharset(characters.SYMBOLS),
 		)
+		charset.Add(includeChars)
+		charset.Remove(excludeChars)
+		
 		return charset.ExtractCharset(), nil	
 	case Alphabetic:
 		charset := characters.NewCharset(characters.ALPHABETIC_UPPERCASE)
 		charset.MergeCharsets(characters.NewCharset(characters.ALPHABETIC_LOWERCASE))
+		charset.Add(includeChars)
+		charset.Remove(excludeChars)
+		
 		return charset.ExtractCharset(), nil
 	case AlphabeticLower:
 		charset := characters.NewCharset(characters.ALPHABETIC_LOWERCASE)
+		charset.Add(includeChars)
+		charset.Remove(excludeChars)
+		
 		return charset.ExtractCharset(), nil
 	case AlphabeticUpper:
 		charset := characters.NewCharset(characters.ALPHABETIC_LOWERCASE)
+		charset.Add(includeChars)
+		charset.Remove(excludeChars)
+		
 		return charset.ExtractCharset(), nil
 	case Custom:
 		charset := characters.NewCharset(customCharacters)
 		return charset.ExtractCharset(), nil
 	case Digits:
 		charset := characters.NewCharset(characters.DIGITS)
+		charset.Add(includeChars)
+		charset.Remove(excludeChars)
+		
 		return charset.ExtractCharset(), nil
 	default:
 		return nil, errors.New("Something went wrong with the mode selected!")
