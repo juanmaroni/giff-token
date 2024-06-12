@@ -12,6 +12,9 @@ const HELP_TEST = `
 
 `
 
+const MIN_TOKEN_LENGTH = 10
+const MAX_TOKEN_LENGTH = 4096
+
 func main() {
 	flag.Usage = func() {
 		fmt.Print(HELP_TEST)
@@ -25,7 +28,18 @@ func main() {
 
 	flag.Parse()
 
-	mode, _ := token.GetModeFromString(*modeStr)
+	if (*length < MIN_TOKEN_LENGTH) {
+		*length = MIN_TOKEN_LENGTH
+	} else if (*length > MAX_TOKEN_LENGTH) {
+		*length = MAX_TOKEN_LENGTH
+	}
+
+	mode, _ := token.GetModeFromString(*modeStr) // TODO: Handle error
+
+	if (*characters != "") {
+		// Custom mode ignores includeChars and excludeChars
+		mode = token.Custom
+	}
 
 	config := token.NewTokenConfig(uint16(*length), mode, *characters, *includeChars, *excludeChars)
 	fmt.Println(generator.GenerateToken(config))
