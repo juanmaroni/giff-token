@@ -21,8 +21,34 @@ const (
 	Digits Mode              = "digits"
 )
 
+// map of string to Mode for quick lookup
+var modeMap = map[string]Mode{
+	"alphanumeric":            Alphanumeric,
+	"alphanumeric lowercase":  AlphanumericLower,
+	"alphanumeric uppercase":  AlphanumericUpper,
+	"allchars":                Allchars,
+	"allchars lowercase":      AllcharsLower,
+	"allchars uppercase":      AllcharsUpper,
+	"alphabetic":              Alphabetic,
+	"alphabetic lowercase":    AlphabeticLower,
+	"alphabetic uppercase":    AlphabeticUpper,
+	"custom":                  Custom,
+	"digits":                  Digits,
+}
+
+// Function to get Mode from string
+func GetModeFromString(s string) (Mode, error) {
+	mode, exists := modeMap[s]
+
+	if !exists {
+		return "", errors.New("Invalid mode")
+	}
+
+	return mode, nil
+}
+
 type TokenConfig struct {
-	length uint8
+	Length uint16
 	mode Mode
 	customChars string
 	includeChars string
@@ -40,13 +66,13 @@ func DefaultTokenConfig() TokenConfig {
 	}
 
 	return TokenConfig {
-		length: 24,
+		Length: 24,
 		mode: defaultMode,
 		Characters: chars,
 	}
 }
 
-func NewTokenConfig(length uint8, mode Mode, customChars string, includeChars string, excludeChars string) TokenConfig {
+func NewTokenConfig(length uint16, mode Mode, customChars string, includeChars string, excludeChars string) TokenConfig {
 	if (mode != Custom) {
 		customChars = ""
 	}
@@ -58,7 +84,7 @@ func NewTokenConfig(length uint8, mode Mode, customChars string, includeChars st
 	}
 
 	return TokenConfig {
-		length: length,
+		Length: length,
 		mode: mode,
 		customChars: customChars,
 		includeChars: includeChars,
