@@ -73,7 +73,7 @@ func DefaultTokenConfig() TokenConfig {
 }
 
 func NewTokenConfig(length uint16, mode Mode, customChars string, includeChars string, excludeChars string) TokenConfig {
-	if (mode != Custom) {
+	if mode != Custom {
 		customChars = ""
 	}
 

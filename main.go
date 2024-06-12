@@ -20,6 +20,9 @@ func main() {
 		fmt.Print(HELP_TEST)
 	}
 
+	// Check config file
+	// TODO
+
 	length := flag.Uint("length", 24, "Token length")
 	modeStr := flag.String("mode", "alphanumeric", "Mode to select base characters")
 	characters := flag.String("characters", "", "Use custom set of characters")
@@ -28,15 +31,15 @@ func main() {
 
 	flag.Parse()
 
-	if (*length < MIN_TOKEN_LENGTH) {
+	if *length < MIN_TOKEN_LENGTH {
 		*length = MIN_TOKEN_LENGTH
-	} else if (*length > MAX_TOKEN_LENGTH) {
+	} else if *length > MAX_TOKEN_LENGTH {
 		*length = MAX_TOKEN_LENGTH
 	}
 
 	mode, _ := token.GetModeFromString(*modeStr) // TODO: Handle error
 
-	if (*characters != "") {
+	if *characters != "" {
 		// Custom mode ignores includeChars and excludeChars
 		mode = token.Custom
 	}
