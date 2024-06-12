@@ -3,10 +3,13 @@ package main
 import (
 	"flag"
 	"fmt"
+	"giff-token/generator"
+	"giff-token/token"
 )
 
 const HELP_TEST = `
 ༼ つ ◕_◕ ༽つ Giff Token (giff-token)
+
 `
 
 func main() {
@@ -15,17 +18,15 @@ func main() {
 	}
 
 	length := flag.Uint("length", 24, "Token length")
-	mode := flag.String("mode", "alphanumeric", "Mode to select base characters")
+	modeStr := flag.String("mode", "alphanumeric", "Mode to select base characters")
 	characters := flag.String("characters", "", "Use custom set of characters")
 	includeChars := flag.String("includeChars", "", "Custom charset to include")
 	excludeChars := flag.String("excludeChars", "", "Custom charset to exclude")
 
 	flag.Parse()
 
-	fmt.Println("length:", *length)
-    fmt.Println("mode:", *mode)
-	fmt.Println("characters:", *characters)
-    fmt.Println("includeChars:", *includeChars)
-	fmt.Println("excludeChars:", *excludeChars)
-    fmt.Println("tail:", flag.Args())
+	mode, _ := token.GetModeFromString(*modeStr)
+
+	config := token.NewTokenConfig(uint16(*length), mode, *characters, *includeChars, *excludeChars)
+	fmt.Println(generator.GenerateToken(config))
 }
