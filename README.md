@@ -39,3 +39,6 @@ Examples:
     giff-token -config /path/to/config.giff
 
 ```
+
+## Status
+Usable, but unfinished. Catching some bugs.
