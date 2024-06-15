@@ -1,8 +1,12 @@
 package token
 
 import (
+	"bufio"
 	"errors"
 	"giff-token/characters"
+	"os"
+	"strconv"
+	"strings"
 )
 
 type Mode string
@@ -36,7 +40,7 @@ var modeMap = map[string]Mode {
 	"digits":                  Digits,
 }
 
-// Function to get Mode from string
+// Function to get Mode from string name
 func GetModeFromString(s string) (Mode, error) {
 	mode, exists := modeMap[s]
 
@@ -186,5 +190,75 @@ func GetCharacters(mode Mode, customCharacters string, includeChars string, excl
 		return charset.ExtractCharset(), nil
 	default:
 		return nil, errors.New("Something went wrong with the mode selected!")
+	}
+}
+
+func ParseConfigFile(filePath string) (*TokenConfig, error) {
+	file, err := os.Open(filePath)
+    
+	if err != nil {
+        return nil, err
+    }
+
+    defer file.Close()
+
+    scanner := bufio.NewScanner(file)
+	config := &TokenConfig{}
+
+    for scanner.Scan() {
+        line := scanner.Text()
+        parts := strings.SplitN(line, "=", 2)
+
+		// Skip malformed lines
+        if len(parts) != 2 {
+            continue
+        }
+
+        key := strings.TrimSpace(parts[0])
+        value := strings.TrimSpace(parts[1])
+
+        switch key {
+        case "length":
+            length, err := strconv.ParseUint(value, 10, 16)
+			
+			if err != nil {
+				// TODO: Error or default?
+				config.Length = 24
+			} else {
+				config.Length = uint16(length)
+			}
+        case "mode":
+            config.mode, err = GetModeFromString(value)
+
+			if err != nil {
+				// TODO: Handle error
+			}
+        case "customChars":
+            config.customChars = value
+        case "includeChars":
+            config.includeChars = value
+        case "excludeChars":
+            config.excludeChars = value
+        }
+    }
+
+    if err := scanner.Err(); err != nil {
+        return nil, err
+    }
+
+	// Make sure Custom mode works as expected
+	if config.customChars != "" {
+		config.mode = Custom
+		config.includeChars = ""
+		config.excludeChars = ""
+	}
+
+	// Check if we have enough info for a token
+	if config.mode != "" || config.customChars != "" {
+		config.Characters, _ = GetCharacters(config.mode, config.customChars, config.includeChars, config.excludeChars) // TODO: Handle error
+
+		return config, nil
+	} else {
+		return nil, errors.New("Config file format is wrong!")
 	}
 }
