@@ -60,22 +60,6 @@ type TokenConfig struct {
 	Characters []rune
 }
 
-// Token options with default values // Delete or change, use NewTokenConfig
-func DefaultTokenConfig() TokenConfig {
-	const defaultMode = Alphanumeric
-	chars, err := GetCharacters(defaultMode, "", "", "")
-
-	if err != nil {
-		panic(err)
-	}
-
-	return TokenConfig {
-		Length: 24,
-		mode: defaultMode,
-		Characters: chars,
-	}
-}
-
 func NewTokenConfig(length uint16, mode Mode, customChars string, includeChars string, excludeChars string) TokenConfig {
 	if mode != Custom {
 		customChars = ""

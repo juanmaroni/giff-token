@@ -46,7 +46,7 @@ func main() {
 				config = *parser
 			}
 		} else {
-			config = token.DefaultTokenConfig()
+			config = token.NewTokenConfig(24, token.Alphanumeric, "", "", "")
 		}
 	} else {
 		if *configFile != "" {
