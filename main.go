@@ -8,7 +8,7 @@ import (
 	"os"
 )
 
-const HELP_TEST = `
+const HELP_TEXT = `
 ༼ つ ◕_◕ ༽つ Giff Token (giff-token)
 
 Usage:
@@ -52,7 +52,7 @@ const CONFIG_FILENAME = "config.giff"
 
 func main() {
 	flag.Usage = func() {
-		fmt.Print(HELP_TEST)
+		fmt.Print(HELP_TEXT)
 	}
 
 	length := flag.Uint("length", 24, "Token length")
