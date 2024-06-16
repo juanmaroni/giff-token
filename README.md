@@ -8,7 +8,7 @@
 Usage:
     giff-token
     giff-token -help
-    giff-token [-length <length> -mode <mode> -includeChars <includeChars> -excludeChars <excludeChars>]
+    giff-token [-length <length> -mode <mode> -includeChars <characters> -excludeChars <characters>]
     giff-token [-length <length> -characters <characters>]
     giff-token -config <file>
 
@@ -22,7 +22,7 @@ Options:
     -characters     Use a custom set of characters. "-mode", "-includeChars" and "-excludeChars" will be ignored.
     -includeChars   Include custom set of characters to a selected mode.
     -excludeChars   Exclude custom set of characters from a selected mode.
-	-config			Use a config file to specify the previous parameters.
+    -config			Use a config file to specify the previous parameters.
 
 No options equals to:
     giff-token -length 24 -mode alphanumeric
