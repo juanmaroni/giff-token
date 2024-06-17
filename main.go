@@ -85,8 +85,14 @@ func main() {
 		if *configFile != "" {
 			_, err := os.Stat(*configFile);
 
-			if err != nil {
-				// TODO: parse file as config
+			if err == nil {
+				parser, err := token.ParseConfigFile(*configFile)
+
+				if err != nil {
+					// TODO: Handle error
+				} else {
+					config = *parser
+				}
 			} else {
 				// TODO: Handle error
 			}
