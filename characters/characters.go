@@ -1,5 +1,7 @@
 package characters
 
+import "sync"
+
 const ALPHABETIC_UPPERCASE string = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 const ALPHABETIC_LOWERCASE string = "abcdefghijklmnopqrstuvwxyz"
 const DIGITS string = "0123456789"
@@ -29,7 +31,6 @@ func (charset Charset) Remove(characters string) {
     }
 }
 
-
 func (charset Charset) ExtractCharset() []rune {
 	chars := make([]rune, len(charset))
 	i := 0
@@ -42,11 +43,19 @@ func (charset Charset) ExtractCharset() []rune {
 	return chars
 }
 
-// Go routines?
 func (charset Charset) MergeCharsets(moreCharsets... Charset) {
+	var wg sync.WaitGroup
+
 	for _, anotherCharset := range moreCharsets {
 		for k, v := range anotherCharset {
-			charset[k] = v
+			wg.Add(1)
+
+			go func(key rune, value struct{}) {
+				defer wg.Done()
+				charset[key] = value
+			}(k, v)
 		}
 	}
+
+	wg.Wait()
 }
