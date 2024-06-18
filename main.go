@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"giff-token/generator"
@@ -66,35 +67,30 @@ func main() {
 
 	var config token.TokenConfig
 	var mode token.Mode
+	var err error
 	
 	if flag.NFlag() == 0 {
-		_, err := os.Stat(CONFIG_FILENAME);
+		code, err := setConfigFromFile(CONFIG_FILENAME, &config)
 
-		if err == nil {
-			parser, err := token.ParseConfigFile(CONFIG_FILENAME)
-
-			if err != nil {
-				// TODO: Handle error
+		if err != nil {
+			if code == 1 {
+				config = token.NewTokenConfig(24, token.Alphanumeric, "", "", "")
 			} else {
-				config = *parser
+				fmt.Println(err)
+				return
 			}
-		} else {
-			config = token.NewTokenConfig(24, token.Alphanumeric, "", "", "")
 		}
 	} else {
 		if *configFile != "" {
-			_, err := os.Stat(*configFile);
+			code, err := setConfigFromFile(*configFile, &config)
 
-			if err == nil {
-				parser, err := token.ParseConfigFile(*configFile)
-
-				if err != nil {
-					// TODO: Handle error
+			if err != nil {
+				if code == 1 {
+					config = token.NewTokenConfig(24, token.Alphanumeric, "", "", "")
 				} else {
-					config = *parser
+					fmt.Println(err)
+					return
 				}
-			} else {
-				// TODO: Handle error
 			}
 		} else {
 			if *length < MIN_TOKEN_LENGTH {
@@ -103,7 +99,12 @@ func main() {
 				*length = MAX_TOKEN_LENGTH
 			}
 		
-			mode, _ = token.GetModeFromString(*modeStr) // TODO: Handle error
+			mode, err = token.GetModeFromString(*modeStr)
+
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
 		
 			if *characters != "" {
 				// Custom mode ignores includeChars and excludeChars
@@ -115,4 +116,22 @@ func main() {
 	}
 	
 	fmt.Println(generator.GenerateToken(config))
+}
+
+func setConfigFromFile(filepath string, config *token.TokenConfig) (uint8, error) {
+	_, err := os.Stat(filepath);
+
+	if err != nil {
+		return 1, errors.New("ERROR: Couldn't open config file.")
+	} else {
+		parser, err := token.ParseConfigFile(filepath)
+
+		if err != nil {
+			return 2, err
+		} else {
+			*config = *parser
+
+			return 0, nil
+		}
+	}
 }
