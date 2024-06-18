@@ -206,8 +206,7 @@ func ParseConfigFile(filePath string) (*TokenConfig, error) {
             length, err := strconv.ParseUint(value, 10, 16)
 			
 			if err != nil {
-				// TODO: Error or default?
-				config.Length = 24
+				return nil, errors.New("ERROR: The length is not valid.")
 			} else {
 				config.Length = uint16(length)
 			}
@@ -215,7 +214,7 @@ func ParseConfigFile(filePath string) (*TokenConfig, error) {
             config.mode, err = GetModeFromString(value)
 
 			if err != nil {
-				// TODO: Handle error
+				return nil, errors.New("ERROR: The mode is not valid.")
 			}
         case "customChars":
             config.customChars = value
@@ -231,18 +230,25 @@ func ParseConfigFile(filePath string) (*TokenConfig, error) {
     }
 
 	// Make sure Custom mode works as expected
-	if config.customChars != "" {
-		config.mode = Custom
+	if config.mode == Custom {
+		if config.customChars == "" {
+			return nil, errors.New("ERROR: No custom characters provided.")
+		}
+
 		config.includeChars = ""
 		config.excludeChars = ""
 	}
 
 	// Check if we have enough info for a token
-	if config.mode != "" || config.customChars != "" {
-		config.Characters, _ = GetCharacters(config.mode, config.customChars, config.includeChars, config.excludeChars) // TODO: Handle error
+	if config.mode != "" {
+		config.Characters, err = GetCharacters(config.mode, config.customChars, config.includeChars, config.excludeChars)
+
+		if err != nil {
+			return nil, errors.New("ERROR: Something went wrong when generating the charset.")
+		}
 
 		return config, nil
 	} else {
-		return nil, errors.New("Config file format is wrong!")
+		return nil, errors.New("ERROR: Config file format is incorrect.")
 	}
 }
