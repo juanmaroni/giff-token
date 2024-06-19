@@ -93,12 +93,6 @@ func main() {
 				}
 			}
 		} else {
-			if *length < MIN_TOKEN_LENGTH {
-				*length = MIN_TOKEN_LENGTH
-			} else if *length > MAX_TOKEN_LENGTH {
-				*length = MAX_TOKEN_LENGTH
-			}
-		
 			mode, err = token.GetModeFromString(*modeStr)
 
 			if err != nil {
@@ -113,6 +107,15 @@ func main() {
 
 			config = token.NewTokenConfig(uint16(*length), mode, *characters, *includeChars, *excludeChars)
 		}
+	}
+
+	// Apply token length constraints
+	cfgLength := config.Length
+
+	if cfgLength < MIN_TOKEN_LENGTH {
+		config.Length = MIN_TOKEN_LENGTH
+	} else if cfgLength > MAX_TOKEN_LENGTH {
+		config.Length = MAX_TOKEN_LENGTH
 	}
 	
 	fmt.Println(generator.GenerateToken(config))
