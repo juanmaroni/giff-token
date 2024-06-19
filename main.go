@@ -99,11 +99,6 @@ func main() {
 				fmt.Println(err)
 				return
 			}
-		
-			if *characters != "" {
-				// Custom mode ignores includeChars and excludeChars
-				mode = token.Custom
-			}
 
 			config = token.NewTokenConfig(uint16(*length), mode, *characters, *includeChars, *excludeChars)
 		}
